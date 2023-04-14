@@ -25,28 +25,27 @@ def gappy_interp(xint, x0, y0, *, maxgap=None, **kwargs):
 
     yint = np.interp(xint, x0, y0, **kwargs)
 
-    # figure out which sample each time in time base belongs to:
+    # figure out which x0 each xint belongs to:
     x_index = np.searchsorted(x0, xint, side='right')
     x_index = np.clip(x_index, 0, len(x0)-1)
 
     # figure out the space between sample pairs
     dx = np.concatenate(([0], np.diff(x0)))
-    # get the gap size for each timebase data point:
-    # get the indices of timebase that are too large:
+    # get the gap size for each xint data point:
+    # get the indices of xint that are too large:
     index = (dx[x_index] > maxgap)
 
-    # this is fine, except the degenerate case when a timebase point falls
-    # directly on a sample time.  In that case we want to keep the data at
+    # this is fine, except the degenerate case when a xint point falls
+    # directly on a x0 value.  In that case we want to keep the data at
     # that point.  So we just choose the other inequality for the index:
-    # figure out which sample each time in time base belongs to:
+
+    # as above, but use side='right':
     x_index = np.searchsorted(x0, xint, side='right')
     x_index = np.clip(x_index, 0, len(x0)-1)
-
-    # figure out the space between sample pairs
     dx = np.concatenate(([0], np.diff(x0)))
-    # get the gap size for each timebase data point:
-    # get the indices of timebase that are too large:
     index = np.logical_and(index, (dx[x_index] > maxgap))
+
+    # set interpolated values where xint is inside a big gap to NaN:
     yint[index] = np.NaN
 
     return yint
