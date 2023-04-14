@@ -38,12 +38,7 @@ def gappy_interp(xint, x0, y0, *, maxgap=None, **kwargs):
     # this is fine, except the degenerate case when a xint point falls
     # directly on a x0 value.  In that case we want to keep the data at
     # that point.  So we just choose the other inequality for the index:
-
-    # as above, but use side='right':
-    x_index = np.searchsorted(x0, xint, side='right')
-    x_index = np.clip(x_index, 0, len(x0)-1)
-    dx = np.concatenate(([0], np.diff(x0)))
-    index = np.logical_and(index, (dx[x_index] > maxgap))
+    index = ~np.logical_or((dx[x_index] <= maxgap),(np.isin(xint, x0)))
 
     # set interpolated values where xint is inside a big gap to NaN:
     yint[index] = np.NaN
