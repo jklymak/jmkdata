@@ -1,0 +1,22 @@
+name: pyglider
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python
+  - numpy
+  - pip
+  - xarray
+  - dask
+  - netcdf4
+  - gsw
+  - scipy
+  - bitstring
+  - pytest
+  - pytest-cov
+  - pooch
+  - matplotlib
+  - polars
+  - pip:
+    - dbdreader
+
